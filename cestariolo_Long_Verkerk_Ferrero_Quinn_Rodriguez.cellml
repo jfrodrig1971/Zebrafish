@@ -89,7 +89,7 @@ Jose F Rodriguez Matas
             <apply>
                 <eq/>
                 <ci>V_c</ci>
-                <cn cellml:units="microliter" type="e-notation">900<sep/>-9</cn>
+                <cn cellml:units="microliter" type="e-notation">390<sep/>-9</cn>
             </apply>
             <apply>
                 <eq/>
@@ -103,7 +103,7 @@ Jose F Rodriguez Matas
             <apply>
                 <eq/>
                 <ci>A_c</ci>
-                <cn cellml:units="cm2" type="e-notation">6937.5<sep/>-8</cn>
+                <cn cellml:units="cm2" type="e-notation">3000.0<sep/>-8</cn>
             </apply>
             <apply>
                 <eq/>
@@ -1441,14 +1441,31 @@ Jose F Rodriguez Matas
         <variable name="dL" private_interface="in" public_interface="out" units="dimensionless"/>
         <variable name="fL" private_interface="in" units="dimensionless"/>
         <variable name="fCa" private_interface="in" units="dimensionless"/>
+        <variable name="atmp" units="dimensionless"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
                 <eq/>
-                <ci>i_CaL</ci>
+                <ci>atmp</ci>
                 <apply>
                     <divide/>
                     <apply>
                         <times/>
+                        <cn cellml:units="dimensionless">2</cn>
+                        <ci>V</ci>
+                        <ci>F</ci>
+                    </apply>
+                    <apply>
+                        <times/>
+                        <ci>R</ci>
+                        <ci>T</ci>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>i_CaL</ci>
+                <piecewise>
+                    <piece>
                         <apply>
                             <divide/>
                             <apply>
@@ -1457,72 +1474,84 @@ Jose F Rodriguez Matas
                                 <ci>dL</ci>
                                 <ci>fL</ci>
                                 <ci>fCa</ci>
-                                <cn cellml:units="dimensionless">4</cn>
-                                <ci>V</ci>
+                                <cn cellml:units="dimensionless">2</cn>
+                                <ci>F</ci>
                                 <apply>
-                                    <power/>
-                                    <ci>F</ci>
-                                    <cn cellml:units="dimensionless">2</cn>
-                                </apply>
-                            </apply>
-                            <apply>
-                                <times/>
-                                <ci>R</ci>
-                                <ci>T</ci>
-                            </apply>
-                        </apply>
-                        <apply>
-                            <minus/>
-                            <apply>
-                                <times/>
-                                <ci>Ca_i</ci>
-                                <apply>
-                                    <exp/>
+                                    <minus/>
                                     <apply>
-                                        <divide/>
+                                        <times/>
+                                        <ci>Ca_i</ci>
                                         <apply>
-                                            <times/>
-                                            <cn cellml:units="dimensionless">2</cn>
-                                            <ci>V</ci>
-                                            <ci>F</ci>
+                                            <plus/>
+                                            <cn cellml:units="dimensionless">1.0</cn>
+                                            <ci>atmp</ci>
                                         </apply>
                                         <apply>
-                                            <times/>
-                                            <ci>R</ci>
-                                            <ci>T</ci>
+                                            <exp/>
+                                            <ci>atmp</ci>
                                         </apply>
+                                    </apply>
+                                    <apply>
+                                        <times/>
+                                        <cn cellml:units="dimensionless">0.341</cn>
+                                        <ci>Ca_o</ci>
                                     </apply>
                                 </apply>
                             </apply>
                             <apply>
-                                <times/>
-                                <cn cellml:units="dimensionless">0.341</cn>
-                                <ci>Ca_o</ci>
+                                <exp/>
+                                <ci>atmp</ci>
                             </apply>
                         </apply>
-                    </apply>
-                    <apply>
-                        <minus/>
                         <apply>
-                            <exp/>
+                            <lt/>
                             <apply>
-                                <divide/>
+                                <abs/>
+                                <ci>atmp</ci>
+                            </apply>
+                            <cn cellml:units="dimensionless" type="e-notation">1.0<sep/>-5</cn>
+                        </apply>
+                    </piece>
+                    <otherwise>
+                        <apply>
+                            <divide/>
+                            <apply>
+                                <times/>
+                                <ci>g_CaL</ci>
+                                <ci>dL</ci>
+                                <ci>fL</ci>
+                                <ci>fCa</ci>
+                                <cn cellml:units="dimensionless">2</cn>
+                                <ci>F</ci>
+                                <ci>atmp</ci>
                                 <apply>
-                                    <times/>
-                                    <cn cellml:units="dimensionless">2</cn>
-                                    <ci>V</ci>
-                                    <ci>F</ci>
-                                </apply>
-                                <apply>
-                                    <times/>
-                                    <ci>R</ci>
-                                    <ci>T</ci>
+                                    <minus/>
+                                    <apply>
+                                        <times/>
+                                        <ci>Ca_i</ci>
+                                        <apply>
+                                            <exp/>
+                                            <ci>atmp</ci>
+                                        </apply>
+                                    </apply>
+                                    <apply>
+                                        <times/>
+                                        <cn cellml:units="dimensionless">0.341</cn>
+                                        <ci>Ca_o</ci>
+                                    </apply>
                                 </apply>
                             </apply>
+                            <apply>
+                                <minus/>
+                                <apply>
+                                    <exp/>
+                                    <ci>atmp</ci>
+                                </apply>
+                                <cn cellml:units="dimensionless">1</cn>
+                            </apply>
                         </apply>
-                        <cn cellml:units="dimensionless">1</cn>
-                    </apply>
-                </apply>
+                    </otherwise>
+                </piecewise>
             </apply>
         </math>
     </component>
